@@ -6,7 +6,7 @@
   let targetPlace = '';
   let targetMethod = '';
   let completedLeads = [];
-  let allowRepeats = false;
+  let allowRepeats = true;
 
   const handleGenerate = () => {
     // If repeats are disabled, add the current lead to the list of completed leads
@@ -55,9 +55,6 @@
 
 <!-- Template -->
 <main>
-  {#if !allowRepeats}
-    <p class="lead-count">{completedLeadsCount}/{uniqueLeads}</p>
-  {/if}
   <div class="checkbox-wrapper">
     <!-- Reset the 'completed leads' status when toggling the checkbox -->
     <input type="checkbox" name="allow-repeats" bind:checked={allowRepeats} on:change={() => reset(false)} />
@@ -65,7 +62,10 @@
   </div>
   <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
   <button class="button__generate" on:click={handleGenerate}>Generate</button>
-  <button class="button__reset" on:click={() => reset(true)}>Reset</button>
+  {#if !allowRepeats}
+    <p class="lead-count">{completedLeadsCount}/{uniqueLeads}</p>
+    <button class="button__reset" on:click={() => reset(true)}>Reset</button>
+  {/if}
 </main>
 
 <!--  -->
