@@ -5,10 +5,40 @@
   const methodSet = smiths;
   let targetPlace = '';
   let targetMethod = '';
+  let completedMethods = [];
+
+  const uniqueLeads = methodSet.methods.length * (methodSet.stage - 1);
+
+  const handleGenerate = () => {
+    completedMethods.push(`${targetPlace}_${targetMethod}`);
+    console.log(completedMethods);
+    // If we finished all the leads, show a completion screen
+    if (completedMethods.length >= uniqueLeads) {
+      showFinishState();
+      return;
+    }
+    generateRequest();
+  };
 
   const generateRequest = () => {
-    targetPlace = generatePlaceBell(methodSet.stage);
-    targetMethod = generatePracticeMethod(methodSet.methods);
+    const place = generatePlaceBell(methodSet.stage);
+    const method = generatePracticeMethod(methodSet.methods);
+    if (completedMethods.includes(`${place}_${method}`)) {
+      generateRequest();
+      return;
+    }
+    targetPlace = place;
+    targetMethod = method;
+  };
+
+  const showFinishState = () => {
+    targetPlace = 'Completed!';
+    targetMethod = 'Reset to continue';
+  };
+
+  const reset = () => {
+    completedMethods = [];
+    generateRequest();
   };
 
   generateRequest();
@@ -17,7 +47,8 @@
 <!-- Template -->
 <main>
   <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
-  <button class="method-generator" on:click={generateRequest}>Generate</button>
+  <button class="method-generator" on:click={handleGenerate}>Generate</button>
+  <button class="method-reset" on:click={reset}>Reset</button>
 </main>
 
 <!--  -->
@@ -39,7 +70,8 @@
     font-weight: 200;
   }
 
-  .method-generator {
+  .method-generator,
+  .method-reset {
     display: block;
     color: white;
     background-color: #e93a00;
@@ -48,10 +80,11 @@
     padding: 0.5rem 2rem;
     font-size: 2rem;
     font-weight: 200;
-    margin: auto;
+    margin: 10px auto;
   }
 
-  .method-generator:hover {
+  .method-generator:hover,
+  .method-reset:hover {
     background-color: #d33500;
   }
 </style>
