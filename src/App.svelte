@@ -5,14 +5,14 @@
   const methodSet = smiths;
   let targetPlace = '';
   let targetMethod = '';
-  let completedMethods = [];
+  let completedLeads = [];
 
   const handleGenerate = () => {
     // Have to reassign in this way for svelte computed properties to work
-    completedMethods = [...completedMethods, `${targetPlace}_${targetMethod}`];
+    completedLeads = [...completedLeads, `${targetPlace}_${targetMethod}`];
 
     // If we finished all the leads, show a completion screen
-    if (completedMethods.length >= uniqueLeads) {
+    if (completedLeads.length >= uniqueLeads) {
       showFinishState();
       return;
     }
@@ -23,7 +23,7 @@
   const generateRequest = () => {
     const place = generatePlaceBell(methodSet.stage);
     const method = generatePracticeMethod(methodSet.methods);
-    if (completedMethods.includes(`${place}_${method}`)) {
+    if (completedLeads.includes(`${place}_${method}`)) {
       generateRequest();
       return;
     }
@@ -37,7 +37,7 @@
   };
 
   const reset = () => {
-    completedMethods = [];
+    completedLeads = [];
     generateRequest();
   };
 
@@ -46,19 +46,19 @@
   generateRequest();
 
   // Reactive properties
-  $: completedMethodsCount = Math.min(uniqueLeads, completedMethods.length + 1);
+  $: completedLeadsCount = Math.min(uniqueLeads, completedLeads.length + 1);
 </script>
 
 <!-- Template -->
 <main>
-  <p class="methods-completed">{completedMethodsCount}/{uniqueLeads}</p>
+  <p class="methods-completed">{completedLeadsCount}/{uniqueLeads}</p>
   <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
-  <div class="checkbox-wrapper">
+  <!-- <div class="checkbox-wrapper">
     <input type="checkbox" name="allow-repeats" />
     <label for="allow-repeats">Allow repeats</label>
-  </div>
-  <button class="method-generator" on:click={handleGenerate}>Generate</button>
-  <button class="method-reset" on:click={reset}>Reset</button>
+  </div> -->
+  <button class="button__generate" on:click={handleGenerate}>Generate</button>
+  <button class="button__reset" on:click={reset}>Reset</button>
 </main>
 
 <!--  -->
@@ -106,7 +106,7 @@
     transition: all 0.12s linear;
   }
 
-  .method-generator {
+  .button__generate {
     color: #111111;
     background-color: #e93a00;
     padding: 0.5rem 2rem;
@@ -115,11 +115,11 @@
     border: none;
   }
 
-  .method-generator:hover {
+  .button__generate:hover {
     background-color: #d33500;
   }
 
-  .method-reset {
+  .button__reset {
     margin-top: 1rem;
     background-color: transparent;
     border: 2px solid #e93a00;
@@ -127,7 +127,7 @@
     font-size: 1.5rem;
   }
 
-  .method-reset:hover {
+  .button__reset:hover {
     background-color: #e93a00;
     color: #111111;
   }
