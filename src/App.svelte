@@ -7,8 +7,6 @@
   let targetMethod = '';
   let completedMethods = [];
 
-  const uniqueLeads = methodSet.methods.length * (methodSet.stage - 1);
-
   const handleGenerate = () => {
     // Have to reassign in this way for svelte computed properties to work
     completedMethods = [...completedMethods, `${targetPlace}_${targetMethod}`];
@@ -43,8 +41,11 @@
     generateRequest();
   };
 
+  // On initialisation we should generate a lead, and calculate the number of total leads
+  const uniqueLeads = methodSet.methods.length * (methodSet.stage - 1);
   generateRequest();
 
+  // Reactive properties
   $: completedMethodsCount = Math.min(uniqueLeads, completedMethods.length + 1);
 </script>
 
