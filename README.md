@@ -1,6 +1,7 @@
 ## The project
 
-Cheap and cheerful Svelte app to randomly choose some place bell from Smith's 23 Spliced to revise.
+Cheap and cheerful Svelte app to randomly choose some place bell from Smith's 23 Spliced to help you revise!
+You can disable repeats to run through all 161 leads, or choose randomly from all leads each time.
 
 Hosted on surge at [23-spliced-practice.surge.sh](http://23-spliced-practice.surge.sh)
 
