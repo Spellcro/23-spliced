@@ -6,10 +6,14 @@
   let targetPlace = '';
   let targetMethod = '';
   let completedLeads = [];
+  let allowRepeats = false;
 
   const handleGenerate = () => {
-    // Have to reassign in this way for svelte computed properties to work
-    completedLeads = [...completedLeads, `${targetPlace}_${targetMethod}`];
+    // If repeats are disabled, add the current lead to the list of completed leads
+    if (!allowRepeats) {
+      // Have to reassign in this way for svelte computed properties to work
+      completedLeads = [...completedLeads, `${targetPlace}_${targetMethod}`];
+    }
 
     // If we finished all the leads, show a completion screen
     if (completedLeads.length >= uniqueLeads) {
@@ -36,9 +40,9 @@
     targetMethod = 'Reset to continue';
   };
 
-  const reset = () => {
+  const reset = (generateNewMethod) => {
     completedLeads = [];
-    generateRequest();
+    if (generateNewMethod) generateRequest();
   };
 
   // On initialisation we should generate a lead, and calculate the number of total leads
@@ -51,14 +55,17 @@
 
 <!-- Template -->
 <main>
-  <p class="methods-completed">{completedLeadsCount}/{uniqueLeads}</p>
-  <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
-  <!-- <div class="checkbox-wrapper">
-    <input type="checkbox" name="allow-repeats" />
+  {#if !allowRepeats}
+    <p class="lead-count">{completedLeadsCount}/{uniqueLeads}</p>
+  {/if}
+  <div class="checkbox-wrapper">
+    <!-- Reset the 'completed leads' status when toggling the checkbox -->
+    <input type="checkbox" name="allow-repeats" bind:checked={allowRepeats} on:change={() => reset(false)} />
     <label for="allow-repeats">Allow repeats</label>
-  </div> -->
+  </div>
+  <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
   <button class="button__generate" on:click={handleGenerate}>Generate</button>
-  <button class="button__reset" on:click={reset}>Reset</button>
+  <button class="button__reset" on:click={() => reset(true)}>Reset</button>
 </main>
 
 <!--  -->
@@ -89,8 +96,12 @@
     margin: 0 5px 0 0;
   }
 
-  .methods-completed {
+  .lead-count {
     font-size: 0.8rem;
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .chosen-method {
