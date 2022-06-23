@@ -53,6 +53,10 @@
 <main>
   <p class="methods-completed">{completedMethodsCount}/{uniqueLeads}</p>
   <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
+  <div class="checkbox-wrapper">
+    <input type="checkbox" name="allow-repeats" />
+    <label for="allow-repeats">Allow repeats</label>
+  </div>
   <button class="method-generator" on:click={handleGenerate}>Generate</button>
   <button class="method-reset" on:click={reset}>Reset</button>
 </main>
@@ -73,6 +77,16 @@
     font-weight: 200;
     text-align: center;
     text-transform: uppercase;
+  }
+
+  .checkbox-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  input[type='checkbox'] {
+    margin: 0 5px 0 0;
   }
 
   .methods-completed {
