@@ -69,7 +69,7 @@
 </main>
 
 <!--  -->
-<style>
+<style lang="scss">
   :global(body) {
     background-color: #111111;
   }
@@ -124,10 +124,9 @@
     font-size: 2rem;
     margin: 10px auto;
     border: none;
-  }
-
-  .button__generate:hover {
-    background-color: #d33500;
+    &:hover {
+      background-color: #d33500;
+    }
   }
 
   .button__reset {
@@ -136,10 +135,9 @@
     border: 2px solid #e93a00;
     color: #e93a00;
     font-size: 1.5rem;
-  }
-
-  .button__reset:hover {
-    background-color: #e93a00;
-    color: #111111;
+    &:hover {
+      background-color: #e93a00;
+      color: #111111;
+    }
   }
 </style>
