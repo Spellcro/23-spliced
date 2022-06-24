@@ -70,14 +70,9 @@
 
 <!--  -->
 <style lang="scss">
-  :global(body) {
-    background-color: #111111;
-  }
-
   main {
     max-width: 360px;
     max-height: 540px;
-    height: 100%;
     margin: auto;
     padding: 1rem;
     color: #e93a00;
@@ -123,7 +118,7 @@
     padding: 0.5rem 2rem;
     font-size: 2rem;
     margin: 10px auto;
-    border: none;
+
     &:hover {
       background-color: #d33500;
     }
@@ -135,7 +130,9 @@
     border: 2px solid #e93a00;
     color: #e93a00;
     font-size: 1.5rem;
-    &:hover {
+
+    &:hover,
+    &:focus {
       background-color: #e93a00;
       color: #111111;
     }
