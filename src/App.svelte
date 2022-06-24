@@ -6,7 +6,7 @@
   let targetPlace = '';
   let targetMethod = '';
   let completedLeads = [];
-  let allowRepeats = true;
+  let allowRepeats = localStorage.getItem('repeat') === 'true';
 
   const handleGenerate = () => {
     // If repeats are disabled, add the current lead to the list of completed leads
@@ -45,6 +45,13 @@
     if (generateNewMethod) generateRequest();
   };
 
+  const handleRepeatChange = () => {
+    // Save new value to localStorage
+    localStorage.setItem('repeat', allowRepeats);
+    // Reset the form without generating a new lead
+    reset(false);
+  };
+
   // On initialisation we should generate a lead, and calculate the number of total leads
   const uniqueLeads = methodSet.methods.length * (methodSet.stage - 1);
   generateRequest();
@@ -57,7 +64,7 @@
 <main>
   <div class="checkbox-wrapper">
     <!-- Reset the 'completed leads' status when toggling the checkbox -->
-    <input type="checkbox" name="allow-repeats" bind:checked={allowRepeats} on:change={() => reset(false)} />
+    <input type="checkbox" name="allow-repeats" bind:checked={allowRepeats} on:change={handleRepeatChange} />
     <label for="allow-repeats">Allow repeats</label>
   </div>
   <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
