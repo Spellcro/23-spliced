@@ -40,9 +40,9 @@
     targetMethod = 'Reset to continue';
   };
 
-  const reset = (generateNewMethod) => {
+  const reset = (shouldGenerateNewMethod) => {
     completedLeads = [];
-    if (generateNewMethod) generateRequest();
+    if (shouldGenerateNewMethod) generateRequest();
   };
 
   const handleRepeatChange = () => {
