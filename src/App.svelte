@@ -62,11 +62,11 @@
 
 <!-- Template -->
 <main>
-  <div class="checkbox-wrapper">
+  <label for="allow-repeats" class="checkbox-wrapper">
     <!-- Reset the 'completed leads' status when toggling the checkbox -->
     <input type="checkbox" name="allow-repeats" bind:checked={allowRepeats} on:change={handleRepeatChange} />
-    <label for="allow-repeats">Allow repeats</label>
-  </div>
+    Allow repeats
+  </label>
   <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
   <button class="button__generate" on:click={handleGenerate}>Generate</button>
   {#if !allowRepeats}
@@ -77,12 +77,16 @@
 
 <!--  -->
 <style lang="scss">
+  $brand-primary: #e93a00;
+  $brand-dark: #d33500;
+  $background: #111;
+
   main {
     max-width: 360px;
     max-height: 540px;
     margin: auto;
     padding: 1rem;
-    color: #e93a00;
+    color: $brand-primary;
     font-weight: 200;
     text-align: center;
     text-transform: uppercase;
@@ -92,10 +96,36 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 5px;
   }
 
   input[type='checkbox'] {
-    margin: 0 5px 0 0;
+    // Hide the default checkbox styles:
+    appearance: none;
+    margin: 0;
+    // Style actual checkbox
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid $brand-primary;
+    border-radius: 3px;
+    transform: translateY(-0.075em);
+    // Allow easy centering of ::before element
+    display: grid;
+    place-content: center;
+
+    &::before {
+      content: '';
+      width: 0.65em;
+      height: 0.65em;
+      transform: scale(0); // Checked state should be hidden by default
+      transition: 80ms transform ease-in-out;
+      box-shadow: inset 1em 1em $brand-primary;
+    }
+
+    &:checked::before {
+      // Scale up the 'checked' state of the input when checked
+      transform: scale(1);
+    }
   }
 
   .lead-count {
@@ -120,28 +150,28 @@
   }
 
   .button__generate {
-    color: #111111;
-    background-color: #e93a00;
+    color: $background;
+    background-color: $brand-primary;
     padding: 0.5rem 2rem;
     font-size: 2rem;
     margin: 10px auto;
 
     &:hover {
-      background-color: #d33500;
+      background-color: $brand-dark;
     }
   }
 
   .button__reset {
     margin-top: 1rem;
     background-color: transparent;
-    border: 2px solid #e93a00;
-    color: #e93a00;
+    border: 2px solid $brand-primary;
+    color: $brand-primary;
     font-size: 1.5rem;
 
     &:hover,
     &:focus {
-      background-color: #e93a00;
-      color: #111111;
+      background-color: $brand-primary;
+      color: $background;
     }
   }
 </style>
