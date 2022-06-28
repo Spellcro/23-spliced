@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { smiths } from './method-data/smiths';
   import { generatePlaceBell, generatePracticeMethod } from './utils/method-generation';
 
@@ -40,14 +40,14 @@
     targetMethod = 'Reset to continue';
   };
 
-  const reset = (shouldGenerateNewMethod) => {
+  const reset = (shouldGenerateNewMethod: boolean) => {
     completedLeads = [];
     if (shouldGenerateNewMethod) generateRequest();
   };
 
   const handleRepeatChange = () => {
     // Save new value to localStorage
-    localStorage.setItem('repeat', allowRepeats);
+    localStorage.setItem('repeat', JSON.stringify(allowRepeats));
     // Reset the form without generating a new lead
     reset(false);
   };
