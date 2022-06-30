@@ -3,6 +3,7 @@
   import { generatePlaceBell, generatePracticeMethod } from './utils/method-generation';
 
   const methodSet = smiths;
+  const methodNames = methodSet.methods.map((m) => m.name);
   let targetPlace = '';
   let targetMethod = '';
   let completedLeads = [];
@@ -26,7 +27,7 @@
 
   const generateRequest = () => {
     const place = generatePlaceBell(methodSet.stage);
-    const method = generatePracticeMethod(methodSet.methods);
+    const method = generatePracticeMethod(methodNames);
     if (completedLeads.includes(`${place}_${method}`)) {
       generateRequest();
       return;
