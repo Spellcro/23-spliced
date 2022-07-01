@@ -1,15 +1,11 @@
 import { isCharNumber } from './characters.utils';
-
-const checkIsValidPlaceNotation = (notation: string) => {
-  const regex = new RegExp(/-?(\d{2,}(\.|-))+\d{2,},\d{2,}/);
-  return regex.test(notation);
-};
+import { checkIsValidPlaceNotation } from './place-notation.utils';
 
 /**
  * Takes a place notation string and returns an array
  * containing each change
  */
-export const splitPlaceNotationIntoChanges = (notation: string) => {
+const splitPlaceNotationIntoChanges = (notation: string) => {
   if (!checkIsValidPlaceNotation(notation)) return [];
   // TODO: What the fuck
   const firstHalfChanges: string[] = [];
@@ -41,6 +37,46 @@ export const splitPlaceNotationIntoChanges = (notation: string) => {
   // Assemble the complete order of changes
   const finalChangeOrder = [...firstHalfChanges, ...secondHalfChanges, leadEndChange];
 
-  console.log(finalChangeOrder);
   return finalChangeOrder;
+};
+
+// TODO: Use splitPlaceNotationIntoChanges to get each change, then generate a row based on that
+export const generateGrid = (stage: number, notation: string) => {
+  const changes = splitPlaceNotationIntoChanges(notation);
+  const rounds: string[] = [];
+  for (let i = 1; i <= stage; i++) {
+    rounds.push(i.toString());
+  }
+
+  const rows: string[][] = [rounds];
+
+  changes.forEach((change, index) => {
+    const previousRow = rows[index];
+    const nextRow: string[] = [];
+
+    // Make places if the change is not a 'cross'
+    if (change !== '-') {
+      change.split('').forEach((place) => {
+        // TODO: Does not support Royal or Max: 0, E, T don't work correctly
+        const position = parseInt(place);
+        nextRow[position - 1] = previousRow[position - 1];
+      });
+    }
+
+    for (let i = previousRow.length - 1; i >= 0; i -= 1) {
+      // If it already has a value ignore it
+      // if it has a neigbour with no value switch it, else keep it as it was
+      if (!nextRow[i]) {
+        if (i > 0 && !nextRow[i - 1]) {
+          nextRow[i] = previousRow[i - 1]; // need swapping
+          nextRow[i - 1] = previousRow[i];
+        } else {
+          nextRow[i] = previousRow[i]; // forced places
+        }
+      }
+    }
+    rows.push(nextRow);
+  });
+
+  return rows;
 };
