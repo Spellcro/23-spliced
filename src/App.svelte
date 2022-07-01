@@ -1,5 +1,7 @@
 <script lang="ts">
+  import Grid from './components/Grid.svelte';
   import { smiths } from './method-data/smiths';
+  import { generateGrid } from './utils/grid-generation';
   import { generatePlaceBell, generatePracticeMethod } from './utils/method-generation';
 
   const methodSet = smiths;
@@ -8,6 +10,8 @@
   let targetMethod = '';
   let completedLeads = [];
   let allowRepeats = localStorage.getItem('repeat') === 'true';
+  let gridRows = [];
+  let isShowingGrid = false;
 
   const handleGenerate = () => {
     // If repeats are disabled, add the current lead to the list of completed leads
@@ -26,6 +30,8 @@
   };
 
   const generateRequest = () => {
+    hideGrid();
+
     const place = generatePlaceBell(methodSet.stage);
     const method = generatePracticeMethod(methodNames);
     if (completedLeads.includes(`${place}_${method}`)) {
@@ -43,6 +49,7 @@
 
   const reset = (shouldGenerateNewMethod: boolean) => {
     completedLeads = [];
+    hideGrid();
     if (shouldGenerateNewMethod) generateRequest();
   };
 
@@ -53,11 +60,23 @@
     reset(false);
   };
 
+  const showGrid = () => {
+    const placeNotation = methodSet.methods.find((m) => m.name === targetMethod)?.placeNotation;
+    if (!placeNotation) throw new Error('Invalid method');
+    gridRows = generateGrid(methodSet.stage, placeNotation);
+    isShowingGrid = true;
+  };
+
+  const hideGrid = () => {
+    isShowingGrid = false;
+  };
+
   // On initialisation we should generate a lead, and calculate the number of total leads
   const uniqueLeads = methodSet.methods.length * (methodSet.stage - 1);
   generateRequest();
 
   // Reactive properties
+  $: currentPlace = parseInt(targetPlace);
   $: completedLeadsCount = Math.min(uniqueLeads, completedLeads.length + 1);
 </script>
 
@@ -73,6 +92,13 @@
   {#if !allowRepeats}
     <p class="lead-count">{completedLeadsCount}/{uniqueLeads}</p>
     <button class="button__reset" on:click={() => reset(true)}>Reset</button>
+  {/if}
+  {#if !isShowingGrid}
+    <button class="button__generate" on:click={showGrid}>Show Grid</button>
+  {/if}
+  {#if isShowingGrid}
+    <Grid {gridRows} {currentPlace} />
+    <button class="button__generate" on:click={hideGrid}>Hide Grid</button>
   {/if}
 </main>
 
