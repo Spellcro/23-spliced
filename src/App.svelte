@@ -1,8 +1,8 @@
 <script lang="ts">
   import Grid from './components/Grid.svelte';
   import { smiths } from './method-data/smiths';
-  import { generateGrid } from './utils/grid-generation';
-  import { generatePlaceBell, generatePracticeMethod } from './utils/method-generation';
+  import { generateGrid } from './utils/grid-generation.utils';
+  import { generatePlaceBell, generatePracticeMethod } from './utils/method-generation.utils';
 
   const methodSet = smiths;
   const methodNames = methodSet.methods.map((m) => m.name);
