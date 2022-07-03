@@ -10,4 +10,10 @@
   $: setCanvasData(gridRows, currentBell, canvas);
 </script>
 
-<canvas bind:this={canvas} width={126} height={535} />
+<canvas bind:this={canvas} width={150} height={534} />
+
+<style lang="scss">
+  canvas {
+    padding-left: 24px;
+  }
+</style>

@@ -96,12 +96,12 @@
   {#if isShowingGrid}
     <p class="chosen-method__small">{targetMethod}</p>
     <Grid {gridRows} {currentPlace} />
-    <button class="actions--button" on:click={hideGrid}>Hide Grid</button>
+    <button class="actions--button" on:click={hideGrid}>Exit Grid</button>
   {:else}
     <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
     <div class="actions--container">
       <button class="actions--button" on:click={handleGenerate}>Next Lead</button>
-      <button class="actions--button" on:click={showGrid}>Show Grid</button>
+      <button class="actions--button" on:click={showGrid}>Check Grid</button>
     </div>
   {/if}
 </main>
@@ -128,7 +128,7 @@
     justify-content: center;
     align-items: center;
     gap: 5px;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
   }
 
   input[type='checkbox'] {

@@ -25,6 +25,7 @@ export const setCanvasData = (gridRows: string[][], currentPlace: string, canvas
     context.lineTo(...getLineCoords(rowIndex, treblesPosition));
   });
   context.stroke();
+  context.closePath();
 
   // Highlight current bell
   const startingPosition = parseInt(currentPlace) - 1;
@@ -37,8 +38,17 @@ export const setCanvasData = (gridRows: string[][], currentPlace: string, canvas
     context.lineTo(...getLineCoords(rowIndex, bellPosition));
   });
   context.stroke();
+  context.closePath();
 
-  // Draw a small circle at the start and end locations
+  // Indicate the end placebell
+  const nextPlacebell = gridRows[gridRows.length - 1].findIndex((bell) => bell === currentPlace) + 1;
+  context.lineWidth = 1;
+  context.fillStyle = '#e93a00';
+  context.beginPath();
+  context.arc(...getLineCoords(gridRows.length - 1, 8.5), rowHeight / 2, 0, 2 * Math.PI);
+  context.stroke();
+  context.closePath();
+  context.fillText(nextPlacebell.toString(), columnWidth * 8.5, rowHeight * gridRows.length);
 };
 
 const getLineCoords = (row: number, col: number): [number, number] => [
