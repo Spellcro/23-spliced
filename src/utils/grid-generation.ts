@@ -6,14 +6,14 @@ import { checkIsValidPlaceNotation } from './place-notation.utils';
  */
 const splitPlaceNotationIntoChanges = (notation: string) => {
   if (!checkIsValidPlaceNotation(notation)) return [];
-  // TODO: What the fuck
+
   const firstHalfChanges: string[] = [];
   const [leadNotation, leadEndChange] = notation.split(',');
   // split the 'lead' portion of the notation into each change
 
   for (let i = 0; i < leadNotation.length; i++) {
     const char = leadNotation.charAt(i);
-    switch (leadNotation.charAt(i)) {
+    switch (char) {
       case '.':
         break;
       case '-':
