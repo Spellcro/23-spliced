@@ -62,7 +62,6 @@
 
   const showGrid = () => {
     const placeNotation = methodSet.methods.find((m) => m.name === targetMethod)?.placeNotation;
-    if (!placeNotation) throw new Error('Invalid method');
     gridRows = generateGrid(methodSet.stage, placeNotation);
     isShowingGrid = true;
   };
@@ -82,23 +81,28 @@
 
 <!-- Template -->
 <main>
-  <label for="allow-repeats" class="checkbox-wrapper">
+  <label for="allow-repeats" class="repeats-checkbox">
     <!-- Reset the 'completed leads' status when toggling the checkbox -->
     <input type="checkbox" name="allow-repeats" bind:checked={allowRepeats} on:change={handleRepeatChange} />
     Allow repeats
   </label>
-  <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
-  <button class="button__generate" on:click={handleGenerate}>Generate</button>
+  <!-- Lead tracker and reset button -->
   {#if !allowRepeats}
-    <p class="lead-count">{completedLeadsCount}/{uniqueLeads}</p>
-    <button class="button__reset" on:click={() => reset(true)}>Reset</button>
-  {/if}
-  {#if !isShowingGrid}
-    <button class="button__generate" on:click={showGrid}>Show Grid</button>
+    <div class="tracker">
+      <p>{completedLeadsCount}/{uniqueLeads}</p>
+      <button on:click={() => reset(true)}>Reset</button>
+    </div>
   {/if}
   {#if isShowingGrid}
+    <p class="chosen-method__small">{targetMethod}</p>
     <Grid {gridRows} {currentPlace} />
-    <button class="button__generate" on:click={hideGrid}>Hide Grid</button>
+    <button class="actions--button" on:click={hideGrid}>Hide Grid</button>
+  {:else}
+    <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
+    <div class="actions--container">
+      <button class="actions--button" on:click={handleGenerate}>Next Lead</button>
+      <button class="actions--button" on:click={showGrid}>Show Grid</button>
+    </div>
   {/if}
 </main>
 
@@ -112,18 +116,19 @@
     max-width: 360px;
     max-height: 540px;
     margin: auto;
-    padding: 1rem;
+    padding: 0.5rem 1rem;
     color: $brand-primary;
     font-weight: 200;
     text-align: center;
     text-transform: uppercase;
   }
 
-  .checkbox-wrapper {
+  .repeats-checkbox {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 5px;
+    margin-bottom: 3rem;
   }
 
   input[type='checkbox'] {
@@ -155,50 +160,62 @@
     }
   }
 
-  .lead-count {
-    font-size: 0.8rem;
+  .tracker {
     position: absolute;
+    display: flex;
+    // align-items: center;
+    // justify-content: center;
     top: 40px;
     left: 50%;
     transform: translateX(-50%);
+
+    p {
+      margin: 0.4em;
+    }
+
+    button {
+      background-color: transparent;
+      color: $brand-primary;
+
+      &:hover {
+        background-color: rgba(233, 58, 0, 0.15);
+      }
+    }
   }
 
   .chosen-method {
-    margin-top: 2rem;
     font-size: 3rem;
+
+    &__small {
+      font-size: 1rem;
+      margin: 0;
+    }
   }
 
   button {
-    display: block;
-    border-radius: 3px;
-    margin: auto;
     text-transform: inherit;
     transition: all 0.12s linear;
   }
 
-  .button__generate {
-    color: $background;
-    background-color: $brand-primary;
-    padding: 0.5rem 2rem;
-    font-size: 2rem;
-    margin: 10px auto;
-
-    &:hover {
-      background-color: $brand-dark;
+  .actions {
+    &--container {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2px;
     }
-  }
 
-  .button__reset {
-    margin-top: 1rem;
-    background-color: transparent;
-    border: 2px solid $brand-primary;
-    color: $brand-primary;
-    font-size: 1.5rem;
-
-    &:hover,
-    &:focus {
-      background-color: $brand-primary;
+    &--button {
+      display: block;
+      border-radius: 3px;
       color: $background;
+      background-color: $brand-primary;
+      padding: 0.75rem 0.5rem;
+      font-size: 1.5rem;
+      width: 100%;
+
+      &:hover {
+        background-color: $brand-dark;
+      }
     }
   }
 </style>

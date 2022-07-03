@@ -11,10 +11,12 @@
       <li class="grid--row">
         {#each row as bell}
           <span
-            class="grid--element"
+            class="grid--bell"
             class:grid--bell__active={bell === currentBell}
-            class:grid--bell__treble={bell === '1'}>{bell}</span
+            class:grid--bell__treble={bell === '1'}
           >
+            {bell}
+          </span>
         {/each}
       </li>
     {/each}
@@ -31,8 +33,8 @@
       color: #777;
       list-style: none;
       list-style-position: outside;
-      margin: none;
-      font-size: 1.2rem;
+      margin: 0 0 1rem;
+      font-size: 1rem;
     }
 
     &--row {
