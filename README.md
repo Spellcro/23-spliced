@@ -5,6 +5,17 @@ You can disable repeats to run through all 161 leads, or choose randomly from al
 
 Hosted on surge at [23-spliced-practice.surge.sh](http://23-spliced-practice.surge.sh)
 
+Things it can do:
+
+- Select a lead at random from the full method set
+- Avoid duplicate leads so you can test your knowledge of all of them
+- Show you the blueline for your current lead
+
+Things it can't do:
+
+- Limit the method set - planned
+- Select any other methods or method sets e.g Std8, Nottm8, PPE - unplanned for now
+
 ## Get started
 
 Install the dependencies...
