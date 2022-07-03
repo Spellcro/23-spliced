@@ -1,4 +1,3 @@
-import { isCharNumber } from './characters.utils';
 import { checkIsValidPlaceNotation } from './place-notation.utils';
 
 /**
@@ -22,7 +21,7 @@ const splitPlaceNotationIntoChanges = (notation: string) => {
         break;
       default:
         // If the previous char was a number, append this char to the last string in the array. Else start a new array element
-        if (i > 0 && isCharNumber(leadNotation.charAt(i - 1))) {
+        if (i > 0 && !isNaN(parseInt(leadNotation.charAt(i - 1)))) {
           firstHalfChanges[firstHalfChanges.length - 1] += char;
         } else {
           firstHalfChanges.push(char);
