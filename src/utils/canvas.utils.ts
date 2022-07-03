@@ -43,5 +43,5 @@ export const setCanvasData = (gridRows: string[][], currentPlace: string, canvas
 
 const getLineCoords = (row: number, col: number): [number, number] => [
   columnWidth * col + 4,
-  rowHeight * (row + 1) - 4,
+  rowHeight * (row + 1) - 5,
 ];
