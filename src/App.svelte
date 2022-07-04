@@ -111,6 +111,8 @@
   $brand-primary: #e93a00;
   $brand-dark: #d33500;
   $background: #111;
+  $reset-background: rgba(233, 58, 0, 0.15);
+  $mobile-breakpoint: 640px;
 
   main {
     max-width: 360px;
@@ -177,8 +179,14 @@
       background-color: transparent;
       color: $brand-primary;
 
-      &:hover {
-        background-color: rgba(233, 58, 0, 0.15);
+      &:active {
+        background-color: $reset-background;
+      }
+
+      @media (min-width: $mobile-breakpoint) {
+        &:hover {
+          background-color: $reset-background;
+        }
       }
     }
   }
@@ -213,8 +221,14 @@
       font-size: 1.5rem;
       width: 100%;
 
-      &:hover {
+      &:active {
         background-color: $brand-dark;
+      }
+
+      @media (min-width: $mobile-breakpoint) {
+        &:hover {
+          background-color: $brand-dark;
+        }
       }
     }
   }
