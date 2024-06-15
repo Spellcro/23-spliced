@@ -131,6 +131,7 @@
   <!-- If no method set is selected, we should choose one -->
   {#if !methodSet}
     <div id="method-selection">
+      <p>Spliced Revision</p>
       <button class="actions--button" on:click={() => selectMethodSet('smiths')}>Smith's 23</button>
       <button class="actions--button" on:click={() => selectMethodSet('standard-eight')}> Standard 8 </button>
       <button class="actions--button" on:click={() => selectMethodSet('nottingham-eight')}> Nottingham 8 </button>
@@ -300,7 +301,13 @@
     }
   }
 
-  #method-selection button {
-    margin-bottom: 1rem;
+  #method-selection {
+    p {
+      font-size: 2rem;
+      margin: 0;
+    }
+    button {
+      margin-top: 1rem;
+    }
   }
 </style>
