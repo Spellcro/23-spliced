@@ -1,17 +1,57 @@
 <script lang="ts">
   import Grid from './components/Grid.svelte';
-  import { smiths } from './method-data/smiths';
+  import type { MethodDataset } from './interfaces/method.interface';
+  import { nottinghamEight, smiths, standardEight } from './method-data';
   import { generateGrid } from './utils/grid-generation.utils';
   import { generatePlaceBell, generatePracticeMethod } from './utils/method-generation.utils';
 
-  const methodSet = smiths;
-  const methodNames = methodSet.methods.map((m) => m.name);
+  let methodSet: MethodDataset = undefined;
+  let methodNames = [];
   let targetPlace = '';
   let targetMethod = '';
   let completedLeads = [];
   let allowRepeats = localStorage.getItem('repeat') === 'true';
   let gridRows = [];
   let isShowingGrid = false;
+  let uniqueLeads: number = undefined;
+
+  const selectMethodSet = (setName: string) => {
+    if (!setName) {
+      return;
+    }
+
+    localStorage.setItem('methodSet', setName);
+
+    switch (setName) {
+      case 'smiths':
+        methodSet = smiths;
+        break;
+      case 'standard-eight':
+        methodSet = standardEight;
+        break;
+      case 'nottingham-eight':
+        methodSet = nottinghamEight;
+        break;
+      default:
+        localStorage.removeItem('methodSet');
+        throw new Error('`selectMethodSet` received an invalid set name: ' + setName);
+    }
+
+    methodNames = methodSet.methods.map((m) => m.name);
+    uniqueLeads = methodSet.methods.length * (methodSet.stage - 1);
+    generateRequest();
+  };
+
+  const resetApplication = () => {
+    methodSet = undefined;
+    methodNames = [];
+    targetPlace = '';
+    targetMethod = '';
+    completedLeads = [];
+    gridRows = [];
+    isShowingGrid = false;
+    localStorage.removeItem('methodSet');
+  };
 
   const handleGenerate = () => {
     // If repeats are disabled, add the current lead to the list of completed leads
@@ -30,6 +70,10 @@
   };
 
   const generateRequest = () => {
+    if (!methodSet) {
+      return;
+    }
+
     hideGrid();
 
     const place = generatePlaceBell(methodSet.stage);
@@ -47,7 +91,7 @@
     targetMethod = 'Reset to continue';
   };
 
-  const reset = (shouldGenerateNewMethod: boolean) => {
+  const resetLeadTracker = (shouldGenerateNewMethod: boolean) => {
     completedLeads = [];
     hideGrid();
     if (shouldGenerateNewMethod) generateRequest();
@@ -57,11 +101,15 @@
     // Save new value to localStorage
     localStorage.setItem('repeat', JSON.stringify(allowRepeats));
     // Reset the form without generating a new lead
-    reset(false);
+    resetLeadTracker(false);
   };
 
   const showGrid = () => {
     const placeNotation = methodSet.methods.find((m) => m.name === targetMethod)?.placeNotation;
+    if (!placeNotation) {
+      throw new Error(`Could not find place notation for current method: ${targetMethod}`);
+    }
+
     gridRows = generateGrid(methodSet.stage, placeNotation);
     isShowingGrid = true;
   };
@@ -70,9 +118,8 @@
     isShowingGrid = false;
   };
 
-  // On initialisation we should generate a lead, and calculate the number of total leads
-  const uniqueLeads = methodSet.methods.length * (methodSet.stage - 1);
-  generateRequest();
+  // On startup, we should set the method set, if one was previously selected and saved to localStorage
+  selectMethodSet(localStorage.getItem('methodSet'));
 
   // Reactive properties
   $: currentPlace = parseInt(targetPlace);
@@ -81,28 +128,40 @@
 
 <!-- Template -->
 <main>
-  <label for="allow-repeats" class="repeats-checkbox">
-    <!-- Reset the 'completed leads' status when toggling the checkbox -->
-    <input type="checkbox" name="allow-repeats" bind:checked={allowRepeats} on:change={handleRepeatChange} />
-    Allow repeats
-  </label>
-  <!-- Lead tracker and reset button -->
-  {#if !allowRepeats}
-    <div class="tracker">
-      <p>{completedLeadsCount}/{uniqueLeads}</p>
-      <button on:click={() => reset(true)}>Reset</button>
+  <!-- If no method set is selected, we should choose one -->
+  {#if !methodSet}
+    <div id="method-selection">
+      <button class="actions--button" on:click={() => selectMethodSet('smiths')}>Smith's 23</button>
+      <button class="actions--button" on:click={() => selectMethodSet('standard-eight')}> Standard 8 </button>
+      <button class="actions--button" on:click={() => selectMethodSet('nottingham-eight')}> Nottingham 8 </button>
     </div>
-  {/if}
-  {#if isShowingGrid}
-    <p class="chosen-method__small">{targetMethod}</p>
-    <Grid {gridRows} {currentPlace} />
-    <button class="actions--button" on:click={hideGrid}>Exit Grid</button>
   {:else}
-    <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
-    <div class="actions--container">
-      <button class="actions--button" on:click={handleGenerate}>Next Lead</button>
-      <button class="actions--button" on:click={showGrid}>Check Grid</button>
-    </div>
+    <label for="allow-repeats" class="repeats-checkbox">
+      <!-- Reset the 'completed leads' status when toggling the checkbox -->
+      <input type="checkbox" name="allow-repeats" bind:checked={allowRepeats} on:change={handleRepeatChange} />
+      Allow repeats
+    </label>
+    <!-- Lead tracker and reset button -->
+    {#if !allowRepeats}
+      <div class="tracker">
+        <p>{completedLeadsCount}/{uniqueLeads}</p>
+        <button on:click={() => resetLeadTracker(true)}>Reset</button>
+      </div>
+    {/if}
+    {#if isShowingGrid}
+      <p class="chosen-method__small">{targetPlace} {targetMethod}</p>
+      <Grid {gridRows} {currentPlace} />
+      <button class="actions--button" on:click={hideGrid}>Exit Grid</button>
+    {:else}
+      <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
+      {#if targetPlace !== 'Completed!'}
+        <div class="actions--container">
+          <button class="actions--button" on:click={handleGenerate}>Next Lead</button>
+          <button class="actions--button" on:click={showGrid}>Check Grid</button>
+        </div>
+      {/if}
+    {/if}
+    <button class="actions--change-set" on:click={resetApplication}>Change method set</button>
   {/if}
 </main>
 
@@ -165,8 +224,6 @@
   .tracker {
     position: absolute;
     display: flex;
-    // align-items: center;
-    // justify-content: center;
     top: 40px;
     left: 50%;
     transform: translateX(-50%);
@@ -231,5 +288,19 @@
         }
       }
     }
+
+    &--change-set {
+      color: $brand-primary;
+      margin-top: 1rem;
+      background-color: $background;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  #method-selection button {
+    margin-bottom: 1rem;
   }
 </style>
