@@ -13,8 +13,8 @@ Things it can do:
 
 Things it can't do:
 
-- Limit the method set - planned
-- Select any other methods or method sets e.g Std8, Nottm8, PPE - unplanned for now
+- Limit the method set, allowing you to select specific methods to revise
+- Follow the 23 Spliced Peal Composition
 
 ## Get started
 
