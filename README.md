@@ -44,15 +44,10 @@ You can run the newly built app with `npm run start`. This uses [sirv](https://g
 
 ## Deploying to [surge](https://surge.sh/)
 
-Install `surge` if you haven't already:
+The project is currently hosted on surge. We can build and deploy to surge using
 
 ```bash
-npm install -g surge
+npm run deploy
 ```
 
-Then, from within your project folder:
-
-```bash
-npm run build
-surge public 23-spliced-practice.surge.sh
-```
+This will build the project to the `public` folder, then deploy that via surge to the URL specified in the public/CNAME file.

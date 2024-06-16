@@ -6,11 +6,14 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear --host 0.0.0.0",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "deploy": "npm run build && surge public"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
+    "@rollup/plugin-typescript": "^8.0.0",
+    "@tsconfig/svelte": "^2.0.0",
     "autoprefixer": "^10.4.7",
     "postcss": "^8.4.14",
     "rollup": "^2.3.4",
@@ -19,13 +22,12 @@
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
     "sass": "^1.53.0",
+    "surge": "^0.23.1",
     "svelte": "^3.0.0",
-    "svelte-preprocess": "^4.0.0",
     "svelte-check": "^2.0.0",
-    "@rollup/plugin-typescript": "^8.0.0",
-    "typescript": "^4.0.0",
+    "svelte-preprocess": "^4.0.0",
     "tslib": "^2.0.0",
-    "@tsconfig/svelte": "^2.0.0"
+    "typescript": "^4.0.0"
   },
   "dependencies": {
     "sirv-cli": "^2.0.0"
