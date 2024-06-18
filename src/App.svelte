@@ -1,7 +1,7 @@
 <script lang="ts">
   import Grid from './components/Grid.svelte';
-  import type { MethodDataset } from './interfaces/method.interface';
-  import { nottinghamEight, smiths, standardEight } from './method-data';
+  import type { MethodDataset } from './types/method.types';
+  import { fiveSplicedRoyal, nottinghamEight, smiths, standardEight } from './method-data';
   import { generateGrid } from './utils/grid-generation.utils';
   import { generatePlaceBell, generatePracticeMethod } from './utils/method-generation.utils';
 
@@ -32,9 +32,13 @@
       case 'nottingham-eight':
         methodSet = nottinghamEight;
         break;
+      case 'five-spliced-royal':
+        methodSet = fiveSplicedRoyal;
+        break;
       default:
         localStorage.removeItem('methodSet');
-        throw new Error('`selectMethodSet` received an invalid set name: ' + setName);
+        console.error('`selectMethodSet` received an invalid set name: ' + setName);
+        return;
     }
 
     methodNames = methodSet.methods.map((m) => m.name);
@@ -107,7 +111,7 @@
   const showGrid = () => {
     const placeNotation = methodSet.methods.find((m) => m.name === targetMethod)?.placeNotation;
     if (!placeNotation) {
-      throw new Error(`Could not find place notation for current method: ${targetMethod}`);
+      console.error(`Could not find place notation for current method: ${targetMethod}`);
     }
 
     gridRows = generateGrid(methodSet.stage, placeNotation);
@@ -135,6 +139,9 @@
       <button class="actions--button" on:click={() => selectMethodSet('smiths')}>Smith's 23</button>
       <button class="actions--button" on:click={() => selectMethodSet('standard-eight')}> Standard 8 </button>
       <button class="actions--button" on:click={() => selectMethodSet('nottingham-eight')}> Nottingham 8 </button>
+      <button class="actions--button" on:click={() => selectMethodSet('five-spliced-royal')}>
+        5-Spliced Royal (BCNPY)</button
+      >
     </div>
   {:else}
     <label for="allow-repeats" class="repeats-checkbox">

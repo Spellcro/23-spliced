@@ -1,9 +1,9 @@
-interface Method {
+type Method = {
   name: string;
   placeNotation: string;
-}
+};
 
-export interface MethodDataset {
+export type MethodDataset = {
   stage: number;
   methods: Method[];
-}
+};

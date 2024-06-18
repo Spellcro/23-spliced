@@ -1,4 +1,4 @@
-import type { MethodDataset } from '../interfaces/method.interface';
+import type { MethodDataset } from '../types/method.types';
 
 export const nottinghamEight: MethodDataset = {
   stage: 8,
