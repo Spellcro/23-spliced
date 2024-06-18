@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { setCanvasData } from '../utils/canvas.utils';
+  import { getCanvasDimensions, setCanvasData } from '../utils/canvas.utils';
 
   export let gridRows: string[][];
   export let currentPlace: number;
+  let [width, height] = getCanvasDimensions(gridRows);
 
   let canvas!: HTMLCanvasElement;
 
@@ -10,10 +11,10 @@
   $: setCanvasData(gridRows, currentBell, canvas);
 </script>
 
-<canvas bind:this={canvas} width={150} height={534} />
+<canvas bind:this={canvas} {width} {height} />
 
 <style lang="scss">
   canvas {
-    padding-left: 24px;
+    padding: 0.5rem 0 0.5rem 1.5rem;
   }
 </style>

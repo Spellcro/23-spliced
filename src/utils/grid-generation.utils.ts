@@ -1,4 +1,5 @@
 import { checkIsValidPlaceNotation } from './place-notation.utils';
+import { getNumericalPosition } from './notation.utils';
 
 /**
  * Takes a place notation string and returns an array
@@ -39,13 +40,9 @@ const splitPlaceNotationIntoChanges = (notation: string) => {
   return finalChangeOrder;
 };
 
-// TODO: Use splitPlaceNotationIntoChanges to get each change, then generate a row based on that
 export const generateGrid = (stage: number, notation: string) => {
   const changes = splitPlaceNotationIntoChanges(notation);
-  const rounds: string[] = [];
-  for (let i = 1; i <= stage; i++) {
-    rounds.push(i.toString());
-  }
+  const rounds = getInitialChange(stage);
 
   const rows: string[][] = [rounds];
 
@@ -56,8 +53,7 @@ export const generateGrid = (stage: number, notation: string) => {
     // Make places if the change is not a 'cross'
     if (change !== '-') {
       change.split('').forEach((place) => {
-        // TODO: Does not support Royal or Max: 0, E, T don't work correctly
-        const position = parseInt(place);
+        const position = getNumericalPosition(place);
         nextRow[position - 1] = previousRow[position - 1];
       });
     }
@@ -78,4 +74,30 @@ export const generateGrid = (stage: number, notation: string) => {
   });
 
   return rows;
+};
+
+/**
+ * Generates 'rounds' for a given stage
+ * @param stage
+ */
+const getInitialChange = (stage: number) => {
+  const rounds: string[] = [];
+
+  for (let i = 1; i <= stage; i++) {
+    switch (i) {
+      case 10:
+        rounds.push('0');
+        break;
+      case 11:
+        rounds.push('E');
+        break;
+      case 12:
+        rounds.push('T');
+        break;
+      default:
+        rounds.push(i.toString());
+    }
+  }
+
+  return rounds;
 };
