@@ -160,24 +160,8 @@
   {/if}
 </main>
 
-<!--  -->
 <style lang="scss">
-  $brand-primary: #e93a00;
-  $brand-dark: #d33500;
-  $background: #111;
-  $reset-background: rgba(233, 58, 0, 0.15);
-  $mobile-breakpoint: 640px;
-
-  main {
-    max-width: 360px;
-    max-height: 540px;
-    margin: auto;
-    padding: 0.5rem 1rem;
-    color: $brand-primary;
-    font-weight: 200;
-    text-align: center;
-    text-transform: uppercase;
-  }
+  @import './styles/variables.scss';
 
   .repeats-checkbox {
     display: flex;
@@ -185,34 +169,34 @@
     align-items: center;
     gap: 5px;
     margin-bottom: 2.5rem;
-  }
 
-  input[type='checkbox'] {
-    // Hide the default checkbox styles:
-    appearance: none;
-    margin: 0;
-    // Style actual checkbox
-    width: 1.15em;
-    height: 1.15em;
-    border: 0.15em solid $brand-primary;
-    border-radius: 3px;
-    transform: translateY(-0.075em);
-    // Allow easy centering of ::before element
-    display: grid;
-    place-content: center;
+    input[type='checkbox'] {
+      // Hide the default checkbox styles:
+      appearance: none;
+      margin: 0;
+      // Style actual checkbox
+      width: 1.15em;
+      height: 1.15em;
+      border: 0.15em solid $brand-primary;
+      border-radius: 3px;
+      transform: translateY(-0.075em);
+      // Allow easy centering of ::before element
+      display: grid;
+      place-content: center;
 
-    &::before {
-      content: '';
-      width: 0.65em;
-      height: 0.65em;
-      transform: scale(0); // Checked state should be hidden by default
-      transition: 80ms transform ease-in-out;
-      box-shadow: inset 1em 1em $brand-primary;
-    }
+      &::before {
+        content: '';
+        width: 0.65em;
+        height: 0.65em;
+        transform: scale(0); // Checked state should be hidden by default
+        transition: 80ms transform ease-in-out;
+        box-shadow: inset 1em 1em $brand-primary;
+      }
 
-    &:checked::before {
-      // Scale up the 'checked' state of the input when checked
-      transform: scale(1);
+      &:checked::before {
+        // Scale up the 'checked' state of the input when checked
+        transform: scale(1);
+      }
     }
   }
 
@@ -249,49 +233,6 @@
     &__small {
       font-size: 1rem;
       margin: 0;
-    }
-  }
-
-  button {
-    text-transform: inherit;
-    transition: all 0.12s linear;
-  }
-
-  .actions {
-    &--container {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 2px;
-    }
-
-    &--button {
-      display: block;
-      border-radius: 3px;
-      color: $background;
-      background-color: $brand-primary;
-      padding: 0.75rem 0.5rem;
-      font-size: 1.5rem;
-      width: 100%;
-
-      &:active {
-        background-color: $brand-dark;
-      }
-
-      @media (min-width: $mobile-breakpoint) {
-        &:hover {
-          background-color: $brand-dark;
-        }
-      }
-    }
-
-    &--change-set {
-      color: $brand-primary;
-      margin-top: 1rem;
-      background-color: $background;
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
   }
 
