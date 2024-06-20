@@ -1,9 +1,9 @@
 <script lang="ts">
   import Grid from './components/Grid.svelte';
   import type { MethodDataset } from './types/method.types';
-  import { fiveSplicedRoyal, nottinghamEight, smiths, standardEight } from './method-data';
   import { generateGrid } from './utils/grid-generation.utils';
   import { generatePlaceBell, generatePracticeMethod } from './utils/method-generation.utils';
+  import { getMethodSetData } from './utils/data.utils';
 
   let methodSet: MethodDataset = undefined;
   let methodNames = [];
@@ -20,39 +20,25 @@
       return;
     }
 
-    localStorage.setItem('methodSet', setName);
+    methodSet = getMethodSetData(setName);
 
-    switch (setName) {
-      case 'smiths':
-        methodSet = smiths;
-        break;
-      case 'standard-eight':
-        methodSet = standardEight;
-        break;
-      case 'nottingham-eight':
-        methodSet = nottinghamEight;
-        break;
-      case 'five-spliced-royal':
-        methodSet = fiveSplicedRoyal;
-        break;
-      default:
-        localStorage.removeItem('methodSet');
-        console.error('`selectMethodSet` received an invalid set name: ' + setName);
-        return;
+    if (!methodSet) {
+      // Remove any old/invalid methodSet data from localStorage before exiting
+      localStorage.removeItem('methodSet');
+      return;
     }
 
+    localStorage.setItem('methodSet', setName);
     methodNames = methodSet.methods.map((m) => m.name);
     uniqueLeads = methodSet.methods.length * (methodSet.stage - 1);
-    generateRequest();
+    generatePracticeLead();
   };
 
   const resetApplication = () => {
     methodSet = undefined;
-    methodNames = [];
     targetPlace = '';
     targetMethod = '';
     completedLeads = [];
-    gridRows = [];
     isShowingGrid = false;
     localStorage.removeItem('methodSet');
   };
@@ -64,16 +50,15 @@
       completedLeads = [...completedLeads, `${targetPlace}_${targetMethod}`];
     }
 
-    // If we finished all the leads, show a completion screen
+    // If we finished all the leads, don't try to generate a new one
     if (completedLeads.length >= uniqueLeads) {
-      showFinishState();
       return;
     }
-    // Otherwise we should generate a new lead
-    generateRequest();
+
+    generatePracticeLead();
   };
 
-  const generateRequest = () => {
+  const generatePracticeLead = () => {
     if (!methodSet) {
       return;
     }
@@ -83,22 +68,20 @@
     const place = generatePlaceBell(methodSet.stage);
     const method = generatePracticeMethod(methodNames);
     if (completedLeads.includes(`${place}_${method}`)) {
-      generateRequest();
+      generatePracticeLead();
       return;
     }
     targetPlace = place;
     targetMethod = method;
   };
 
-  const showFinishState = () => {
-    targetPlace = 'Completed!';
-    targetMethod = 'Reset to continue';
-  };
-
   const resetLeadTracker = (shouldGenerateNewMethod: boolean) => {
     completedLeads = [];
     hideGrid();
-    if (shouldGenerateNewMethod) generateRequest();
+
+    if (shouldGenerateNewMethod) {
+      generatePracticeLead();
+    }
   };
 
   const handleRepeatChange = () => {
@@ -127,7 +110,7 @@
 
   // Reactive properties
   $: currentPlace = parseInt(targetPlace);
-  $: completedLeadsCount = Math.min(uniqueLeads, completedLeads.length + 1);
+  $: isComplete = completedLeads.length === uniqueLeads;
 </script>
 
 <!-- Template -->
@@ -140,8 +123,8 @@
       <button class="actions--button" on:click={() => selectMethodSet('standard-eight')}> Standard 8 </button>
       <button class="actions--button" on:click={() => selectMethodSet('nottingham-eight')}> Nottingham 8 </button>
       <button class="actions--button" on:click={() => selectMethodSet('five-spliced-royal')}>
-        5-Spliced Royal (BCNPY)</button
-      >
+        5-Spliced Royal (BCNPY)
+      </button>
     </div>
   {:else}
     <label for="allow-repeats" class="repeats-checkbox">
@@ -150,25 +133,29 @@
       Allow repeats
     </label>
     <!-- Lead tracker and reset button -->
-    {#if !allowRepeats}
+    {#if !allowRepeats && !isComplete}
       <div class="tracker">
-        <p>{completedLeadsCount}/{uniqueLeads}</p>
+        <p>{completedLeads.length + 1}/{uniqueLeads}</p>
         <button on:click={() => resetLeadTracker(true)}>Reset</button>
       </div>
     {/if}
-    {#if isShowingGrid}
+
+    {#if isComplete}
+      <p class="chosen-method">Completed!<br />Reset to Continue</p>
+      <button class="actions--button" on:click={() => resetLeadTracker(true)}>Reset</button>
+    {:else if isShowingGrid}
+      <!-- 'Blueline' for the current lead -->
       <p class="chosen-method__small">{targetPlace} {targetMethod}</p>
       <Grid {gridRows} {currentPlace} />
       <button class="actions--button" on:click={hideGrid}>Exit Grid</button>
     {:else}
       <p class="chosen-method">{targetPlace} <br /> {targetMethod}</p>
-      {#if targetPlace !== 'Completed!'}
-        <div class="actions--container">
-          <button class="actions--button" on:click={handleGenerate}>Next Lead</button>
-          <button class="actions--button" on:click={showGrid}>Check Grid</button>
-        </div>
-      {/if}
+      <div class="actions--container">
+        <button class="actions--button" on:click={handleGenerate}>Next Lead</button>
+        <button class="actions--button" on:click={showGrid}>Check Grid</button>
+      </div>
     {/if}
+
     <button class="actions--change-set" on:click={resetApplication}>Change method set</button>
   {/if}
 </main>
