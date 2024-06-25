@@ -80,7 +80,7 @@ export const generateGrid = (stage: number, notation: string) => {
  * Generates 'rounds' for a given stage
  * @param stage
  */
-const getInitialChange = (stage: number) => {
+export const getInitialChange = (stage: number) => {
   const rounds: string[] = [];
 
   for (let i = 1; i <= stage; i++) {
