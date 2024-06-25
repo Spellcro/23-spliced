@@ -32,6 +32,16 @@ npm run dev
 
 Navigate to [localhost:8080](http://localhost:8080). You should see the app running.
 
+## Unit Testing
+
+Unit tests are implemented with Jest to make sure the app's core functions are not broken during updates or refactoring.
+
+To run the tests, we can use
+
+```bash
+npm run test
+```
+
 ## Building and running in production mode
 
 To create an optimised version of the app:
@@ -50,4 +60,4 @@ The project is currently hosted on surge. We can build and deploy to surge using
 npm run deploy
 ```
 
-This will build the project to the `public` folder, then deploy that via surge to the URL specified in the public/CNAME file.
+This will run the tests, and if they are all passing it builds the project to the `public` folder, then deploys that via surge to the URL specified in the public/CNAME file.
