@@ -5,7 +5,7 @@ import { getNumericalPosition } from './notation.utils';
  * Takes a place notation string and returns an array
  * containing each change
  */
-const splitPlaceNotationIntoChanges = (notation: string) => {
+export const splitPlaceNotationIntoChanges = (notation: string) => {
   if (!checkIsValidPlaceNotation(notation)) return [];
 
   const firstHalfChanges: string[] = [];
