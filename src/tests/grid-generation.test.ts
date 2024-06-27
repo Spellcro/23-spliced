@@ -1,16 +1,21 @@
 import { getInitialChange, splitPlaceNotationIntoChanges } from '../utils/grid-generation.utils';
 import { checkIsValidPlaceNotation } from '../utils/place-notation.utils';
 
-const bristolNotation = '-58-14.58-58.36.14-14.58-14-18,18';
+const bristolMajor = '-58-14.58-58.36.14-14.58-14-18,18';
+const bristolRoyal = '-50-14.50-50.36.14-70.58.16-16.70-16-10,10';
+const bristolMax = '-5T-14.5T-5T.36.14-7T.58.16-9T.70.18-18.9T-18-1T,1T';
 
 test('Identifies correct place notation', () => {
-  expect(checkIsValidPlaceNotation(bristolNotation)).toBe(true);
+  expect(checkIsValidPlaceNotation(bristolMajor)).toBe(true);
+  expect(checkIsValidPlaceNotation(bristolRoyal)).toBe(true);
+  expect(checkIsValidPlaceNotation(bristolMax)).toBe(true);
 });
 
 test('Identifies incorrect place notation', () => {
   expect(checkIsValidPlaceNotation('-14-58-12--12-16-38.14-58,12')).toBe(false);
   expect(checkIsValidPlaceNotation('-14-58-12-.12-16-38.14-58,12')).toBe(false);
   expect(checkIsValidPlaceNotation('-14-58-12..12-16-38.14-58,12')).toBe(false);
+  expect(checkIsValidPlaceNotation('-1F-58-12..12-16-38.14-58,12')).toBe(false);
 });
 
 test('Correctly generate rounds for Major', () => {
@@ -61,7 +66,7 @@ test('Correctly split place notation into an array of changes', () => {
     '18',
   ];
 
-  const changes = splitPlaceNotationIntoChanges(bristolNotation);
+  const changes = splitPlaceNotationIntoChanges(bristolMajor);
   expect(changes.length).toBe(expectedChanges.length);
   expect(changes).toEqual(expectedChanges);
 });
