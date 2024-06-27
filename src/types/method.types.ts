@@ -1,6 +1,6 @@
 type Method = {
   name: string;
-  placeNotation: string;
+  notation: string;
 };
 
 export type MethodDataset = {

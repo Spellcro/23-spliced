@@ -92,7 +92,7 @@
   };
 
   const showGrid = () => {
-    const placeNotation = methodSet.methods.find((m) => m.name === targetMethod)?.placeNotation;
+    const placeNotation = methodSet.methods.find((m) => m.name === targetMethod)?.notation;
     if (!placeNotation) {
       console.error(`Could not find place notation for current method: ${targetMethod}`);
     }
